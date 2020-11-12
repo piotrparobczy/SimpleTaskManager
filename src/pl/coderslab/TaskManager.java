@@ -7,35 +7,29 @@ import java.util.Scanner;
 
 public class TaskManager {
 
-  static final String FILE_PATH = "tasks.cvs";
+  static final String FILE_PATH = "tasks.csv";
   static String[][] loadedData;
 
   public static void main(String[] args) {
-    loadedData=getLoadedData();
+    loadedData = getLoadedData();
     showOptions();
 
     Scanner input = new Scanner(System.in);
     String inputLine = "";
     while (!"exit".equals(inputLine)) {
-      // TODO: 11.11.2020 check why only exit work correct
       inputLine = input.nextLine();
       if ("add".equals(inputLine)) {
         addTask();
-        break;
       } else if ("remove".equals(inputLine)) {
         removeTask();
-        break;
       } else if ("list".equals(inputLine)) {
         listTask();
-        break;
       } else if ("exit".equals(inputLine)) {
         exitTask();
-        break;
       } else {
         System.out.println("Please select a correct option.");
       }
     }
-
   }
 
   static String[][] getLoadedData() {
@@ -65,15 +59,16 @@ public class TaskManager {
 
   public static void addTask() {
     String[] tasksAsLines = new String[0];
-    StringBuilder stringBuilder = new StringBuilder();
-    for(int i = 0; i < loadedData.length; i++) {
-      for(int j = 0; j < loadedData[i].length; j++) {
+
+    for (int i = 0; i < loadedData.length; i++) {
+      StringBuilder stringBuilder = new StringBuilder();
+      for (int j = 0; j < loadedData[i].length; j++) {
         stringBuilder.append(loadedData[i][j]).append(",");
       }
-      tasksAsLines = Arrays.copyOf(tasksAsLines,tasksAsLines.length +1);
-      tasksAsLines[i]=stringBuilder.toString();
+      tasksAsLines = Arrays.copyOf(tasksAsLines, tasksAsLines.length + 1);
+      tasksAsLines[i] = stringBuilder.toString();
     }
-    tasksAsLines=Arrays.copyOf(tasksAsLines,tasksAsLines.length + 1);
+    tasksAsLines = Arrays.copyOf(tasksAsLines, tasksAsLines.length + 1);
     Scanner input = new Scanner(System.in);
     StringBuilder taskLines = new StringBuilder();
 
@@ -86,10 +81,11 @@ public class TaskManager {
     // TODO: 12.11.220 musi zwracac do zmiennej globalnej
     tasksAsLines[tasksAsLines.length - 1] = taskLines.toString();
     loadedData = oneDimensionToTwoDimension(tasksAsLines);
+    showOptions();
   }
 
   public static void removeTask() {
-
+    showOptions();
   }
 
   public static void listTask() {
@@ -98,18 +94,16 @@ public class TaskManager {
       for (int j = 0; j < loadedData[i].length; j++) {
         stringBuilder.append(loadedData[i][j]).append(",");
       }
-        stringBuilder.append("\n");
+      stringBuilder.append("\n");
     }
     System.out.println(stringBuilder.toString());
+    showOptions();
   }
 
-  public static void exitTask() {
+  public static void exitTask() {}
 
-  }
-
-  // TODO: 12.11.2020a jeszcze raz copy of
   public static String[][] oneDimensionToTwoDimension(String[] oneDimension) {
-    String[][] twoDimensional = new String[oneDimension.length - 1][3];
+    String[][] twoDimensional = new String[oneDimension.length][3];
     for (int i = 0; i < twoDimensional.length; i++) {
       for (int j = 0; j < twoDimensional[i].length; j++) {
         twoDimensional[i][j] = oneDimension[i].split(",")[j];
