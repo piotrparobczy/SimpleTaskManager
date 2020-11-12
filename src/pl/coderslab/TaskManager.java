@@ -1,8 +1,11 @@
 package pl.coderslab;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class TaskManager {
@@ -78,13 +81,21 @@ public class TaskManager {
     taskLines.append(input.nextLine()).append(",");
     System.out.println("Is your task important: true/false");
     taskLines.append(input.nextLine()).append(",");
-    // TODO: 12.11.220 musi zwracac do zmiennej globalnej
     tasksAsLines[tasksAsLines.length - 1] = taskLines.toString();
     loadedData = oneDimensionToTwoDimension(tasksAsLines);
     showOptions();
   }
 
   public static void removeTask() {
+    // TODO: 13.11.2020 dodaj zabezpieczenie na INTa
+    Scanner input = new Scanner(System.in);
+    Integer indexToDelete = -1;
+    try {
+      indexToDelete = input.nextInt();
+    } catch (InputMismatchException e) {
+      System.out.println("Type number!");
+    }
+    loadedData = ArrayUtils.remove(loadedData, indexToDelete);
     showOptions();
   }
 
@@ -100,7 +111,9 @@ public class TaskManager {
     showOptions();
   }
 
-  public static void exitTask() {}
+  public static void exitTask() {
+    // TODO: 13.11.2020 dodaj zapis i wyjscie-> wiersze do sb i nadpisanie wiersz po wierszu
+  }
 
   public static String[][] oneDimensionToTwoDimension(String[] oneDimension) {
     String[][] twoDimensional = new String[oneDimension.length][3];
