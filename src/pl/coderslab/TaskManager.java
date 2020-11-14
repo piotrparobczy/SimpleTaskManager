@@ -1,6 +1,8 @@
 package pl.coderslab;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -66,7 +68,7 @@ public class TaskManager {
     for (int i = 0; i < loadedData.length; i++) {
       StringBuilder stringBuilder = new StringBuilder();
       for (int j = 0; j < loadedData[i].length; j++) {
-        stringBuilder.append(loadedData[i][j]).append(",");
+        stringBuilder.append(loadedData[i][j]).append(", ");
       }
       tasksAsLines = Arrays.copyOf(tasksAsLines, tasksAsLines.length + 1);
       tasksAsLines[i] = stringBuilder.toString();
@@ -87,16 +89,26 @@ public class TaskManager {
   }
 
   public static void removeTask() {
-    // TODO: 13.11.2020 dodaj zabezpieczenie na INTa
-    Scanner input = new Scanner(System.in);
-    Integer indexToDelete = -1;
-    try {
-      indexToDelete = input.nextInt();
-    } catch (InputMismatchException e) {
-      System.out.println("Type number!");
+      // TODO: 13.11.2020 dodaj zabezpieczenie na INTa
+      Scanner input = new Scanner(System.in);
+      String  indexToDelete = "-1";
+    while (!isNumberAndGreaterThanZero(indexToDelete)) {
+      try {
+        indexToDelete = input.nextLine();
+      } catch (InputMismatchException e) {
+        System.out.println("Type number!");
+      }
     }
-    loadedData = ArrayUtils.remove(loadedData, indexToDelete);
+      Integer indexToDeleteInt = Integer.valueOf(indexToDelete);
+    loadedData = ArrayUtils.remove(loadedData, indexToDeleteInt);
     showOptions();
+  }
+
+  public static boolean isNumberAndGreaterThanZero (String input){
+      if(NumberUtils.isParsable(input)){
+          return Integer.valueOf(input) >= 0;
+      }
+      return false;
   }
 
   public static void listTask() {
