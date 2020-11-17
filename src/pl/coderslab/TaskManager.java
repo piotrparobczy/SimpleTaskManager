@@ -6,6 +6,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -52,8 +53,9 @@ public class TaskManager {
       tasksAsLines = Arrays.copyOf(tasksAsLines, tasksAsLines.length + 1);
       tasksAsLines[tasksAsLines.length - 1] = taskLine;
     }
-
+    scan.close();
     String[][] loadedData = oneDimensionToTwoDimension(tasksAsLines);
+
     return loadedData;
   }
 
@@ -89,31 +91,31 @@ public class TaskManager {
   }
 
   public static void removeTask() {
-      // TODO: 13.11.2020 dodaj zabezpieczenie na INTa
-      Scanner input = new Scanner(System.in);
-      String  indexToDelete = "-1";
+    Scanner input = new Scanner(System.in);
+    String indexToDelete = "-1";
     while (!isNumberAndGreaterThanZero(indexToDelete)) {
-      try {
-        indexToDelete = input.nextLine();
-      } catch (InputMismatchException e) {
-        System.out.println("Type number!");
-      }
+      indexToDelete = input.nextLine();
     }
-      Integer indexToDeleteInt = Integer.valueOf(indexToDelete);
+    Integer indexToDeleteInt = Integer.valueOf(indexToDelete);
     loadedData = ArrayUtils.remove(loadedData, indexToDeleteInt);
     showOptions();
   }
 
-  public static boolean isNumberAndGreaterThanZero (String input){
-      if(NumberUtils.isParsable(input)){
-          return Integer.valueOf(input) >= 0;
+  public static boolean isNumberAndGreaterThanZero(String input) {
+    if (NumberUtils.isParsable(input)) {
+      if (Integer.valueOf(input) < 0) {
+        System.out.println("Type value equal or greater than 0");
       }
-      return false;
+      return Integer.valueOf(input) >= 0;
+    }
+    System.out.println("Type value that is number");
+    return false;
   }
 
   public static void listTask() {
     StringBuilder stringBuilder = new StringBuilder();
     for (int i = 0; i < loadedData.length; i++) {
+      stringBuilder.append("[").append(String.valueOf(i)).append("] ");
       for (int j = 0; j < loadedData[i].length; j++) {
         stringBuilder.append(loadedData[i][j]).append(",");
       }
@@ -124,7 +126,23 @@ public class TaskManager {
   }
 
   public static void exitTask() {
-    // TODO: 13.11.2020 dodaj zapis i wyjscie-> wiersze do sb i nadpisanie wiersz po wierszu
+    StringBuilder stringBuilder = new StringBuilder();
+    for (int i = 0; i < loadedData.length; i++) {
+      for (int j = 0; j < loadedData[i].length; j++) {
+        stringBuilder.append(loadedData[i][j]).append(",");
+      }
+      stringBuilder.append("\n");
+    }
+    stringBuilder.setLength(stringBuilder.length() - 1);
+    PrintWriter printWriter = null;
+    try {
+      printWriter = new PrintWriter("tasks.csv");
+      printWriter.print(stringBuilder.toString());
+      printWriter.close();
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    System.out.println("Bye bye");
   }
 
   public static String[][] oneDimensionToTwoDimension(String[] oneDimension) {
